@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Product>
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = "Home Page";
+
+    string authStatus = Context.Session.GetString("Authenticated");
+    string adminStatus = Context.Session.GetString("Role");
+
+    bool isAdmin = !String.IsNullOrEmpty(adminStatus) && adminStatus.Equals("Admin");
+    bool loggedIn = !String.IsNullOrEmpty(authStatus) && authStatus.Equals("True");
+}
+
+<div class="text-center">
+    <h1>Products</h1>
+</div>
+
+@if (loggedIn && isAdmin)
+            {
+    <div>
+        <a class="btn btn-primary m-2" asp-action="AddProduct">Add Product</a>
+    </div>
+            }
+
+<div class="card-container">    
+    @foreach(var product in Model) 
+    {
+        string lastUpdated = product.updated_date.ToString();
+        if (product.updated_date == null)
+        { lastUpdated = "N/A"; }
+
+        <div class="single-card card shadow">
+            
+                <h2>@product.name</h2>
+                <h3>$@product.price.ToString("0.00")</h3>
+                <p>@product.description</p>
+                <small>Product Code: @product.id</small>
+            <small>Last Updated: @lastUpdated</small>          
+            @Html.ActionLink("Comments", "CommentList", "Comment", new {id = product.id }, new {@class= "btn btn-primary m-2" })
+            @if (loggedIn && isAdmin)
+            {
+                @Html.ActionLink("Edit", "EditProduct", new {  productId=product.id  }, new {@class="btn btn-primary m-2"})
+            }
+            
+        </div>
+    }
+
+</div>
