@@ -1,0 +1,38 @@
+﻿@model TypicalTools.Models.Comment
+
+@{
+    ViewData["Title"] = "EditComment";
+}
+
+<h1>EditComment</h1>
+
+<h4>Comment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditComment">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(c => c.id)
+            @Html.HiddenFor(c => c.session_id)
+            @Html.HiddenFor(c => c.product_id)
+
+            <div class="form-group">
+                <label asp-for="text" class="control-label"></label>
+                <input asp-for="text" class="form-control" />
+                <span asp-validation-for="text" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Comments", "CommentList", "Comment", new {id = Model.product_id})
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
