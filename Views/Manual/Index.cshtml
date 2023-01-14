@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using System.IO;
+
+@{
+    ViewData["Title"] = "User Manuals";
+
+    string authStatus = Context.Session.GetString("Authenticated");
+
+    bool isAdmin = Context.User != null && Context.User.IsInRole("Admin");
+    bool loggedIn = !String.IsNullOrEmpty(authStatus) && authStatus.Equals("True");
+
+    string[] manuals = ViewBag.ManualList;
+}
+
+
+
+<h2>Manuals</h2>
+<hr/>
+
+@if(loggedIn && isAdmin){
+    <a asp-action="AddManual"class="btn btn-danger">Add Manual</a>
+    <hr/>
+}
+@if(loggedIn){
+            <h5>Download Manual</h5>        
+        <form method="post" asp-action="DownloadManual">
+            <input type="text" placeholder="filename.*" name="fileName"/>
+            <input type="submit" value="Download"/>
+        </form>
+        <br/>
+}
+
+        @if (manuals != null)
+{
+    @for(int i = 0; i < manuals.Length; i++)
+    {  
+    <p>@manuals[i]</p>  
+    }
+    
+}
